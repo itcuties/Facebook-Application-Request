@@ -1,0 +1,150 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>ITC Click Challenge</title>
+	
+	<style type="text/css">
+			html, body {
+				margin:0;
+				padding:0;
+			}
+			
+			body {
+				text-align: center;
+				font-family: "Lucida Grande", "Lucida Sans Unicode", Verdana, Helvetica, Arial, sans-serif;
+				background-color: #fff;
+				color: #444;
+				font-size: 75%;
+			}
+	</style>
+	
+   	<script src="http://connect.facebook.net/en_US/all.js">
+   	</script>
+   	<script type="text/javascript">
+     		FB.init({ 
+       			appId:'149259031862240', cookie:true, 
+       			status:true, xfbml:true 
+		});
+
+     		function inviteFriends() {
+			FB.ui({ method: 'apprequests', 
+	       		message: 'Take the challenge in ITC click challenge app.'});
+		}
+
+		function publishScore(clicksNum) {
+			msg = 'My score on ITC click challenge app is ' + clicksNum + ' clicks!';
+				
+			FB.ui({ method: 'feed',
+			name: 'ITC Click Challenge',	 
+			caption: 'Come on and beat it!',
+			description: msg});
+
+		}
+
+	</script>
+
+	<script type="text/javascript">
+		var clicks = 0;
+		var time   = 10;
+		var running = false;
+		var disabled = false;
+		var disableTime = 5;
+		var summary = '';
+	
+		// Init stuff function
+		function init() {
+			clicks 	= 0;
+			time   	= 10;
+			running = false;
+			disabled = false;
+			disableTime = 5;
+			
+			document.getElementById("results").innerHTML = 'Clicks: ' + clicks;
+			document.getElementById("timer").innerHTML = 'Time left: ' + time + ' s';
+			document.getElementById("button").src = 'btn_on.png';
+			
+		}
+		
+		// Click function
+		function click() {
+			// No counting when game is disabled
+			if (disabled)
+				return;
+				
+			// If not running - start it
+			if (!running) {
+				running = true;
+				
+				document.getElementById("summary").innerHTML = '';
+				
+				setTimeout("timer()", 1000);
+			}		
+			// Increment clicks			
+			clicks++;
+			
+			document.getElementById("results").innerHTML = 'Clicks: ' + clicks;
+			
+			if (clicks%2)
+				document.getElementById("button").src = 'btn_off.png';
+			else 
+				document.getElementById("button").src = 'btn_on.png';
+			
+		}
+		
+		// Timer function
+		function timer() {
+			time--;
+			if (time == -1) {				
+				summary = '<b>Your score is ' + clicks + ' clicks in 10 seconds.</b> <a href="javascript: publishScore(' + clicks + ');">Publish</a> it on Your wall or ';
+				document.getElementById("summary").innerHTML = summary;
+
+				disabled = true;				
+				enable();
+				
+			} else {
+				document.getElementById("timer").innerHTML = 'Time left: ' + time + ' s';
+				setTimeout("timer()", 1000);
+			}
+		}
+		
+		// Enable button
+		function enable() {
+			if (disableTime == -1) {
+				init();
+				
+				document.getElementById("summary").innerHTML = summary + ' take another try now!';
+				
+				return;
+			}
+			document.getElementById("summary").innerHTML = summary + ' take another try in ' + disableTime + ' ...';
+			disableTime--;
+			setTimeout("enable()", 1000);
+		}
+		
+	</script>
+
+</head>
+<body>
+
+	<a href="javascript: click();"><img id="button" name="button" src="btn_on.png" border="0"/></a>
+	
+	<div id="results" name="results">
+		Clicks: 0
+	</div>
+	
+	<div id="timer" name="timer">
+		Time left: 10 s
+	</div>
+	
+	<div id="summary" name="summary">
+	</div>
+	
+
+	<div id='fb-root'></div>
+	<div id="fb" name="fb">
+		<a href="javascript: inviteFriends();">Invite friends</a>
+	</div>
+
+</body>
+</html>
